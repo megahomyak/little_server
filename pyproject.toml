@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "little_server"
+version = "0.1.0"
+description = "A dead simple server for personal websites"
+authors = ["megahomyak <g.megahomyak@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+fastapi = "^0.81.0"
+uvicorn = "^0.18.3"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
