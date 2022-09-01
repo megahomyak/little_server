@@ -30,7 +30,10 @@ async def serve(request: Request, file_path: str):
                     script_locals[request.method.lower()](request, file_path)
                 )
             except KeyError:
-                pass
+                return Response(
+                    "Method not allowed.",
+                    status_code=HTTPStatus.METHOD_NOT_ALLOWED,
+                )
     elif os.path.isfile(file_path):
         return FileResponse(file_path)
     return Response("Page not found.", status_code=HTTPStatus.NOT_FOUND)
