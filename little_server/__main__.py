@@ -4,6 +4,7 @@ from http import HTTPStatus
 import uvicorn
 import argparse
 import os
+import re
 
 parser = argparse.ArgumentParser(description=(
     "A dead simple server for personal websites. "
@@ -13,6 +14,8 @@ parser.add_argument("--port", default=443, type=int)
 parser.add_argument("--log-level", default="INFO")
 args = parser.parse_args()
 
+MULTISLASH = re.compile(r"/{2,}")
+
 app = FastAPI()
 
 
@@ -20,6 +23,7 @@ app = FastAPI()
 async def serve(request: Request, file_path: str):
     if "/../" in file_path or file_path.endswith("/.."):
         return Response("Don't go down.", status_code=HTTPStatus.FORBIDDEN)
+    file_path = MULTISLASH.sub("/", file_path)
     file_path = file_path[1:]  # Removing the root slash
     if os.path.isdir(file_path):
         script_path = os.path.join(file_path, "page.py")
