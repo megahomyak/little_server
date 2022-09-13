@@ -5,8 +5,10 @@ import uvicorn
 import argparse
 import os
 
-parser = argparse.ArgumentParser()
-parser.add_argument("path", help="path to the served directory")
+parser = argparse.ArgumentParser(description=(
+    "A dead simple server for personal websites. "
+    "Launch in a directory that needs to be served."
+))
 parser.add_argument("--port", default=443, type=int)
 parser.add_argument("--log-level", default="INFO")
 args = parser.parse_args()
@@ -18,7 +20,7 @@ app = FastAPI()
 async def serve(request: Request, file_path: str):
     if "/../" in file_path or file_path.endswith("/.."):
         return Response("Don't go down.", status_code=HTTPStatus.FORBIDDEN)
-    file_path = os.path.join(args.path, file_path[1:])
+    file_path = file_path[1:]  # Removing the root slash
     if os.path.isdir(file_path):
         script_path = os.path.join(file_path, "page.py")
         if os.path.isfile(script_path):
