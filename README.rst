@@ -6,7 +6,7 @@ This dead simple web server for personal websites is very customizable, but prov
 Why?
 ----
 
-I wanted something simple yet extensible for my blog. My old project `blog`_ is good for blogs, but my plans changed and it won't be enough for me anymore.
+I wanted something simple yet extensible for my blog. My old project `blog`_ is good for blogs, but my plans have changed and it won't be enough for me anymore.
 
 .. _blog: https://github.com/megahomyak/blog
 
