@@ -29,12 +29,12 @@ async def serve(request: Request, file_path: str):
         script_path = os.path.join(file_path, "page.py")
         if os.path.isfile(script_path):
             script_locals = {}
-            script_globals = {"__file__": script_path}
+            script_globals = {}
             with open(script_path, "r", encoding="utf-8") as script:
                 exec(script.read(), script_globals, script_locals)
             try:
                 return await (
-                    script_locals[request.method.lower()](request)
+                    script_locals[request.method.lower()](request, file_path)
                 )
             except KeyError:
                 return Response(
