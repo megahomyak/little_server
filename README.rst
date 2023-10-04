@@ -37,8 +37,7 @@ How?
        from little_server.utils import serve_text
        from fastapi.responses import Response
 
-       get = serve_text("a.txt")  # This file is in the same directory as the script
-
+       get = serve_file("a.txt")  # This file is in the same directory as the script
 
        async def post(request, current_directory):
            return Response("You used POST.")
