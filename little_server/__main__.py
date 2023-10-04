@@ -15,19 +15,22 @@ args = parser.parse_args()
 
 app = FastAPI()
 
-current_directory = os.path.abspath(__file__)
+current_directory = os.path.normpath(os.path.abspath(os.getcwd()))
 
 
 @app.api_route("{file_path:path}")
 async def serve(request: Request, file_path: str):
+    if file_path.startswith("/"):
+        file_path = "." + file_path
     file_path = os.path.normpath(os.path.abspath(file_path))
-    if file_path.startswith(current_directory):
+    print(file_path, current_directory)
+    if not file_path.startswith(current_directory):
         return Response("Don't go outside of the directory of serving.", status_code=HTTPStatus.FORBIDDEN)
     if os.path.isdir(file_path):
         script_path = os.path.join(file_path, "page.py")
         if os.path.isfile(script_path):
             script_locals = {}
-            script_globals = {"open_here": lambda path, *args, **kwargs: open(os.path.join(current_directory, path), *args, **kwargs)}
+            script_globals = {"open": lambda path, *args, **kwargs: open(os.path.join(current_directory, path), *args, **kwargs)}
             with open(script_path, "r", encoding="utf-8") as script:
                 exec(script.read(), script_globals, script_locals)
             try:
