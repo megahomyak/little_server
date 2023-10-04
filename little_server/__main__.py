@@ -23,19 +23,18 @@ async def serve(request: Request, file_path: str):
     if file_path.startswith("/"):
         file_path = "." + file_path
     file_path = os.path.normpath(os.path.abspath(file_path))
-    print(file_path, current_directory)
     if not file_path.startswith(current_directory):
         return Response("Don't go outside of the directory of serving.", status_code=HTTPStatus.FORBIDDEN)
     if os.path.isdir(file_path):
         script_path = os.path.join(file_path, "page.py")
         if os.path.isfile(script_path):
             script_locals = {}
-            script_globals = {"open": lambda path, *args, **kwargs: open(os.path.join(current_directory, path), *args, **kwargs)}
+            script_globals = {"__file__": script_path}
             with open(script_path, "r", encoding="utf-8") as script:
                 exec(script.read(), script_globals, script_locals)
             try:
                 return await (
-                    script_locals[request.method.lower()](request, file_path)
+                    script_locals[request.method.lower()](request)
                 )
             except KeyError:
                 return Response(

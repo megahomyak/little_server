@@ -24,9 +24,9 @@ How?
 3. Fill the base directory
 
    | Every endpoint is a directory with a ``page.py`` file inside.
-   | Functions from this file named after the HTTP method names will serve as handlers.
-   | Every handler must take the request and the relative current directory path as arguments.
-   | The current directory path is needed to perform relative file operations.
+   | Functions from this file named after HTTP methods will serve as handlers.
+   | Every handler must accept the request parameter.
+   | The file's directory is accessible in the `__file__` variable.
 
    **Hint:**
 
@@ -40,7 +40,7 @@ How?
        get = serve_text("a.txt")  # This file is in the same directory as the script
 
 
-       async def post(request, current_directory):
+       async def post(request):
            return Response("You used POST.")
 
 4. Run the server
