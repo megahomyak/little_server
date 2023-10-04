@@ -4,33 +4,32 @@ from http import HTTPStatus
 import uvicorn
 import argparse
 import os
-import re
 
 parser = argparse.ArgumentParser(description=(
     "A dead simple server for personal websites. "
-    "Launch in a directory that needs to be served."
+    "Launch in the directory that needs to be served."
 ))
 parser.add_argument("--port", default=443, type=int)
 parser.add_argument("--log-level", default="INFO")
 args = parser.parse_args()
 
-MULTISLASH = re.compile(r"/{2,}")
-
 app = FastAPI()
+
+current_directory = os.path.abspath(__file__)
 
 
 @app.api_route("{file_path:path}")
 async def serve(request: Request, file_path: str):
-    if "/../" in file_path or file_path.endswith("/.."):
-        return Response("Don't go down.", status_code=HTTPStatus.FORBIDDEN)
-    file_path = MULTISLASH.sub("/", file_path)
-    file_path = file_path[1:]  # Removing the root slash
+    file_path = os.path.normpath(os.path.abspath(file_path))
+    if file_path.startswith(current_directory):
+        return Response("Don't go outside of the directory of serving.", status_code=HTTPStatus.FORBIDDEN)
     if os.path.isdir(file_path):
         script_path = os.path.join(file_path, "page.py")
         if os.path.isfile(script_path):
             script_locals = {}
+            script_globals = {"open_here": lambda path, *args, **kwargs: open(os.path.join(current_directory, path), *args, **kwargs)}
             with open(script_path, "r", encoding="utf-8") as script:
-                exec(script.read(), {}, script_locals)
+                exec(script.read(), script_globals, script_locals)
             try:
                 return await (
                     script_locals[request.method.lower()](request, file_path)
