@@ -1,9 +1,10 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import FileResponse, RedirectResponse
 from http import HTTPStatus
-import uvicorn
 import os
 import runpy
+import uvicorn
+import functools
 
 app = FastAPI()
 
@@ -39,4 +40,4 @@ async def serve(request: Request, file_path: str):
     return Response("Page not found.", status_code=HTTPStatus.NOT_FOUND)
 
 
-uvicorn.main(app=app)
+runner = functools.partial(uvicorn.run, app)
