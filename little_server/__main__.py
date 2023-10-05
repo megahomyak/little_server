@@ -10,7 +10,8 @@ parser = argparse.ArgumentParser(description=(
     "A dead simple server for personal websites. "
     "Launch in the directory that needs to be served."
 ))
-parser.add_argument("--port", default=443, type=int)
+parser.add_argument("--port", type=int)
+parser.add_argument("--host")
 parser.add_argument("--log-level", default="INFO")
 args = parser.parse_args()
 
@@ -48,4 +49,4 @@ async def serve(request: Request, file_path: str):
     return Response("Page not found.", status_code=HTTPStatus.NOT_FOUND)
 
 
-uvicorn.run(app, port=args.port, log_level=args.log_level.lower())
+uvicorn.run(app, host=args.host, port=args.port, log_level=args.log_level.lower())
