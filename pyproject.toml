@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "little_server"
-version = "3.0.0"
+version = "4.0.0"
 description = "A dead simple server for personal websites"
 authors = ["megahomyak <g.megahomyak@gmail.com>"]
 license = "MIT"
