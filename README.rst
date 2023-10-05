@@ -44,13 +44,11 @@ How?
 
 4. Run the server
 
-   Create a script in the directory that will be served. Inside it, run the `app` from the module (using `uvicorn`, for example):
+   Create a script in the directory that will be served. Inside it, run the `app` from the module (using `uvicorn`, for example)::
 
-   ```
-   import uvicorn
-   import little_server
+       import uvicorn
+       import little_server
 
-   uvicorn.run(little_server.app)
-   ```
+       uvicorn.run(little_server.app)
 
    You don't need to restart it if something changes inside the base directory, changed files will be accessible immediately (or after a few seconds, depends on implementation).
