@@ -3,13 +3,10 @@ from fastapi.responses import FileResponse, RedirectResponse
 from http import HTTPStatus
 import os
 import runpy
-import uvicorn
-import functools
 
 app = FastAPI()
 
-current_directory = os.path.normpath(os.path.abspath(os.getcwd()))
-
+_current_directory = os.path.normpath(os.path.abspath(os.getcwd()))
 
 @app.api_route("{file_path:path}")
 async def serve(request: Request, file_path: str):
@@ -17,7 +14,7 @@ async def serve(request: Request, file_path: str):
     if file_path.startswith("/"):
         file_path = "." + file_path
     file_path = os.path.normpath(os.path.abspath(file_path))
-    if not file_path.startswith(current_directory):
+    if not file_path.startswith(_current_directory):
         return Response("Don't go outside of the directory of serving.", status_code=HTTPStatus.FORBIDDEN)
     if os.path.isdir(file_path):
         script_path = os.path.join(file_path, "page.py")
@@ -38,6 +35,3 @@ async def serve(request: Request, file_path: str):
     elif os.path.isfile(file_path):
         return FileResponse(file_path)
     return Response("Page not found.", status_code=HTTPStatus.NOT_FOUND)
-
-
-runner = functools.partial(uvicorn.run, app)
