@@ -9,7 +9,7 @@ app = FastAPI()
 _current_directory = os.path.normpath(os.path.abspath(os.getcwd()))
 
 @app.api_route("{file_path:path}")
-async def serve(request: Request, file_path: str):
+async def _serve(request: Request, file_path: str):
     original_file_path = file_path
     if file_path.startswith("/"):
         file_path = "." + file_path
