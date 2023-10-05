@@ -44,6 +44,6 @@ How?
 
 4. Run the server
 
-   Invoke this program as a Python module with the ``--help`` flag (``python3 -m little_server --help``) to get the information about the arguments needed.
+   Invoke this program as a Python module and pass the arguments like you would for Uvicorn (e.g. `--port 443`, `--host 0.0.0.0`, `--log-level info`, etc.)
 
    You don't need to restart it if something changes inside the base directory, changed files will be accessible immediately (or after a few seconds, depends on implementation).
