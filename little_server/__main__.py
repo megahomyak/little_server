@@ -4,6 +4,7 @@ from http import HTTPStatus
 import uvicorn
 import argparse
 import os
+import runpy
 
 parser = argparse.ArgumentParser(description=(
     "A dead simple server for personal websites. "
@@ -28,19 +29,16 @@ async def serve(request: Request, file_path: str):
     if os.path.isdir(file_path):
         script_path = os.path.join(file_path, "page.py")
         if os.path.isfile(script_path):
-            script_locals = {}
-            script_globals = {}
-            with open(script_path, "r", encoding="utf-8") as script:
-                exec(script.read(), script_globals, script_locals)
+            script_globals = runpy.run_path(script_path)
             try:
-                return await (
-                    script_locals[request.method.lower()](request, file_path)
-                )
+                handler = script_globals[request.method.lower()]
             except KeyError:
                 return Response(
                     "Method not allowed.",
                     status_code=HTTPStatus.METHOD_NOT_ALLOWED,
                 )
+            else:
+                return await handler(request, file_path)
     elif os.path.isfile(file_path):
         return FileResponse(file_path)
     return Response("Page not found.", status_code=HTTPStatus.NOT_FOUND)
