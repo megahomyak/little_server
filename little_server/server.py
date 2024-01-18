@@ -6,15 +6,14 @@ import runpy
 
 app = FastAPI()
 
-_current_directory = os.path.normpath(os.path.abspath(os.getcwd()))
-
 @app.api_route("{file_path:path}")
 async def _serve(request: Request, file_path: str):
+    current_directory = os.path.normpath(os.path.abspath(os.getcwd()))
     original_file_path = file_path
     if file_path.startswith("/"):
         file_path = "." + file_path
     file_path = os.path.normpath(os.path.abspath(file_path))
-    if not file_path.startswith(_current_directory):
+    if not file_path.startswith(current_directory):
         return Response("Don't go outside of the directory of serving.", status_code=HTTPStatus.FORBIDDEN)
     if os.path.isdir(file_path):
         script_path = os.path.join(file_path, "page.py")
