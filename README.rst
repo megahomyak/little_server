@@ -1,3 +1,5 @@
+**WARNING**: I do not use this thing myself anymore because it has some constraints and is too open. I understand that it's still a pretty flexible framework, it's just not very up to my needs.
+
 What?
 -----
 
